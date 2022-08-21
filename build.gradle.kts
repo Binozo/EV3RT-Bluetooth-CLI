@@ -6,7 +6,6 @@ plugins {
 }
 
 group = "com.binozoworks.ev3rt-bluetooth-cli"
-version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -22,8 +21,9 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
-    // https://mvnrepository.com/artifact/dev.bluefalcon/blue-falcon-rpi
-    implementation("dev.bluefalcon:blue-falcon-rpi:0.10.8")
+    // https://mvnrepository.com/artifact/io.ultreia/bluecove
+    implementation("io.ultreia:bluecove:2.1.1")
+
 }
 
 tasks.test {
