@@ -1,69 +1,33 @@
-import dev.bluefalcon.*
+import events.EV3Event
+import handler.ArgHandler
+import handler.BluetoothHandler
 
 fun main(args: Array<String>) {
-    println("Hello World!")
-    val blueFalcon = BlueFalcon(ApplicationContext(), null)
-    blueFalcon.delegates.add(object : BlueFalconDelegate {
-        override fun didCharacteristcValueChanged(
-            bluetoothPeripheral: BluetoothPeripheral,
-            bluetoothCharacteristic: BluetoothCharacteristic
-        ) {
-            TODO("Not yet implemented")
+    val argHandler = ArgHandler(args)
+    argHandler.handle()
+    val targetAddress = argHandler.getTargetBTAddress()
+    // https://stackoverflow.com/a/5976698/14119471
+
+    val bluetoothHandler = BluetoothHandler(targetAddress)
+    bluetoothHandler.setEventListener(object : EV3Event {
+        override fun messageReceived(message: String) {
+            println(message)
         }
 
-        override fun didConnect(bluetoothPeripheral: BluetoothPeripheral) {
-            TODO("Not yet implemented")
+        override fun connected() {
+            println("Successfully connected to EV3")
+            println("Waiting for messages...")
         }
 
-        override fun didDisconnect(bluetoothPeripheral: BluetoothPeripheral) {
-            TODO("Not yet implemented")
+        override fun connectionError(exception: Exception) {
+            println("Connection error:")
+            exception.printStackTrace()
         }
 
-        override fun didDiscoverCharacteristics(bluetoothPeripheral: BluetoothPeripheral) {
-            TODO("Not yet implemented")
-        }
-
-        override fun didDiscoverDevice(
-            bluetoothPeripheral: BluetoothPeripheral,
-            advertisementData: Map<AdvertisementDataRetrievalKeys, Any>
-        ) {
-            TODO("Not yet implemented")
-        }
-
-        override fun didDiscoverServices(bluetoothPeripheral: BluetoothPeripheral) {
-            TODO("Not yet implemented")
-        }
-
-        override fun didReadDescriptor(
-            bluetoothPeripheral: BluetoothPeripheral,
-            bluetoothCharacteristicDescriptor: BluetoothCharacteristicDescriptor
-        ) {
-            TODO("Not yet implemented")
-        }
-
-        override fun didRssiUpdate(bluetoothPeripheral: BluetoothPeripheral) {
-            TODO("Not yet implemented")
-        }
-
-        override fun didUpdateMTU(bluetoothPeripheral: BluetoothPeripheral) {
-            TODO("Not yet implemented")
-        }
-
-        override fun didWriteCharacteristic(
-            bluetoothPeripheral: BluetoothPeripheral,
-            bluetoothCharacteristic: BluetoothCharacteristic,
-            success: Boolean
-        ) {
-            TODO("Not yet implemented")
-        }
-
-        override fun didWriteDescriptor(
-            bluetoothPeripheral: BluetoothPeripheral,
-            bluetoothCharacteristicDescriptor: BluetoothCharacteristicDescriptor
-        ) {
-            TODO("Not yet implemented")
+        override fun disconnected(exception: Exception?) {
+            println("Disconnected")
+            exception?.printStackTrace()
         }
     })
-
-    blueFalcon.scan()
+    bluetoothHandler.connect()
 }
