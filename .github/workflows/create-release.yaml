@@ -20,7 +20,7 @@ jobs:
           mv build/libs/EV3RT-Bluetooth-CLI-standalone.jar ev3rt-bluetooth-cli.jar
 
       - name: version
-        run: echo "::set-output name=version::$(cd cmd && go run main.go -v)"
+        run: echo "::set-output name=version::$(java -jar ev3rt-bluetooth-cli.jar -v)"
         id: version
 
       - name: Make release
