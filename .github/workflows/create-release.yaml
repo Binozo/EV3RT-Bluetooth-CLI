@@ -29,11 +29,10 @@ jobs:
         with:
           draft: false
           prerelease: false
-          release_name: "v${{ steps.version.outputs.version }}"
+          release_name: "v${{ steps.version.outputs.version }} Release"
           tag_name: "v${{ steps.version.outputs.version }}"
           #body_path: README.md
           body: |
-            # v${{ steps.version.outputs.version }} Release
             The jar can be found below. Please see [Usage](https://github.com/Binozo/EV3RT-Bluetooth-CLI/tree/v0.1#usage)
         env:
           GITHUB_TOKEN: ${{ github.token }}
