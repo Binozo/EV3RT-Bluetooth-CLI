@@ -10,7 +10,7 @@ class ArgHandler(private val args: Array<String>) {
         if(args.isNotEmpty()) {
             when(args[0]) {
                 "-v" -> {
-                    println("Version $VERSION")
+                    println(VERSION)
                     exitProcess(0)
                 }
                 else -> {
