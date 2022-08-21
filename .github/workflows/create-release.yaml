@@ -1,0 +1,50 @@
+name: Create release
+on: [workflow_dispatch]
+jobs:
+  Create-Release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build fatJar
+        run: |
+          gradle fatJar
+
+      - name: Rename jar
+        run: |
+          mv build/libs/EV3RT-Bluetooth-CLI-standalone.jar ev3rt-bluetooth-cli.jar
+
+      - name: version
+        run: echo "::set-output name=version::$(cd cmd && go run main.go -v)"
+        id: version
+
+      - name: Make release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: "v${{ steps.version.outputs.version }}"
+          tag_name: "v${{ steps.version.outputs.version }}"
+          #body_path: README.md
+          body: |
+            # v${{ steps.version.outputs.version }} Release
+            The jar can be found below. Please see [Usage](https://github.com/Binozo/EV3RT-Bluetooth-CLI/tree/v0.1#usage)
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Upload arm64
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ev3rt-bluetooth-cli.jar
+          asset_name: ev3rt-bluetooth-cli.jar
+          asset_content_type: application/gzip
+

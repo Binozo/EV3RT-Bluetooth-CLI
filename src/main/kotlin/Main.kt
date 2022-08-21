@@ -6,7 +6,6 @@ fun main(args: Array<String>) {
     val argHandler = ArgHandler(args)
     argHandler.handle()
     val targetAddress = argHandler.getTargetBTAddress()
-    // https://stackoverflow.com/a/5976698/14119471
 
     val bluetoothHandler = BluetoothHandler(targetAddress)
     bluetoothHandler.setEventListener(object : EV3Event {
